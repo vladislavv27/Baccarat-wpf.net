@@ -24,5 +24,20 @@ namespace Baccarat
         {
             InitializeComponent();
         }
+
+        private void bankerbet_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void play_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void playerbet_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }
