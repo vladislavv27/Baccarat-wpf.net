@@ -45,7 +45,7 @@
                                 <Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}"/>
                             </Trigger>
                             <Trigger Property="IsMouseOver" Value="true">
-                                <Setter Property="Background" TargetName="border" Value="{StaticResource Button.MouseOver.Background}"/>
+                                
                                 <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource Button.MouseOver.Border}"/>
                             </Trigger>
                             <Trigger Property="IsPressed" Value="true">
@@ -159,7 +159,7 @@
                                     <Condition Binding="{Binding IsMouseOver, RelativeSource={RelativeSource Self}}" Value="true"/>
                                     <Condition Binding="{Binding TabStripPlacement, RelativeSource={RelativeSource AncestorType={x:Type TabControl}}}" Value="Left"/>
                                 </MultiDataTrigger.Conditions>
-                                <Setter Property="Background" TargetName="mainBorder" Value="{StaticResource TabItem.MouseOver.Background}"/>
+                                <Setter Property="Background" TargetName="mainBorder" Value="#ECF4FC"/>
                                 <Setter Property="BorderBrush" TargetName="mainBorder" Value="{StaticResource TabItem.MouseOver.Border}"/>
                                 <Setter Property="BorderThickness" TargetName="innerBorder" Value="1,1,0,1"/>
                                 <Setter Property="BorderThickness" TargetName="mainBorder" Value="1,1,0,1"/>
@@ -345,6 +345,7 @@
                     <TextBox Style="{DynamicResource TextBoxBet}" Name="bet" Grid.Row="2" Grid.Column="11" Background="#0e642e" BorderBrush="#ffd700" BorderThickness="3" FontSize="18" Height="35" Text="0" MaxLength="5" TextAlignment="Center"/>
                     <TextBlock Name="checkbet" Text="Your bet:" Grid.Column="11" Grid.Row="1" FontSize="18" Foreground="#ffd700" TextAlignment="Center" VerticalAlignment="Bottom"/>
                     <Button Style="{DynamicResource ButtonPlace}" MaxHeight="40" Name="playerbet"  Grid.Column="9" Grid.Row="5" Content="Place" Background="#0e642e" BorderBrush="#ffd700" BorderThickness="3" Foreground="#ffd700" FontSize="20" Click="playerbet_Click"  />
+                    <Button Style="{DynamicResource ButtonPlace}" MaxHeight="35" x:Name="AddToScore"  Grid.Column="11" Grid.Row="0" Content="Add to score" Background="#0e642e" BorderBrush="#ffd700" BorderThickness="3" Foreground="#ffd700" FontSize="16" Click="AddToScore"  />
 
                     <Button Style="{DynamicResource ButtonPlace}"  Name="play" Grid.Column="5" Grid.ColumnSpan="3" Grid.Row="5" Width="180" Height="40" BorderBrush="#ffd700" BorderThickness="3" Foreground="#ffd700" Content="Start" Background="#0e642e" FontSize="26" Click="play_Click"/>
                     <Button Style="{DynamicResource ButtonPlace}" MaxHeight="40" Name="bankerbet" Grid.Column="3" Grid.Row="5" Content="Place" Background="#0e642e" BorderBrush="#ffd700" BorderThickness="3" Foreground="#ffd700" FontSize="20" Click="bankerbet_Click" />
@@ -401,7 +402,7 @@
                     </StackPanel>
                 </TabItem.Header>
                 <Grid>
-                    <DataGrid d:ItemsSource="{d:SampleData ItemCount=5}"/>
+                    <DataGrid Name="DataGridScore"  d:ItemsSource="{d:SampleData ItemCount=5}"/>
 
                 </Grid>
             </TabItem>
