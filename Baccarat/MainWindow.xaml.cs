@@ -13,23 +13,29 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
+using static System.Formats.Asn1.AsnWriter;
 
 namespace Baccarat
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
+
     public partial class MainWindow : Window
     {
         DispatcherTimer dispatcherTimer;
 
+        public List<Score> MyScores;
         public MainWindow()
         {
             InitializeComponent();
+            using (ScoreDbContext _context = new ScoreDbContext())
+            {
+                MyScores = _context.Scores.ToList();
+            }
+            DataGridScore.ItemsSource = MyScores;
             dispatcherTimer = new DispatcherTimer();
             dispatcherTimer.Interval = TimeSpan.FromSeconds(1.5);
             dispatcherTimer.Tick += DispatcherTimer_Tick;
         }
+        public string name;
         public int totalbetmoney;
         public int totalwinmoney;
         public int playedgames;
@@ -450,14 +456,14 @@ namespace Baccarat
                 if (betamount <= bankmoney)
                 {
                     bets();
-                    bankercanwin = true;
+                    playercanwin = true;
+
                 }
                 else
                 {
                     MessageBoxResult result = MessageBox.Show("Not enought money", "Ouch", MessageBoxButton.OK);
                     betamount = 0;
-                    bankerbeted = false;
-
+                    playerbeted = false;
                 }
 
             }
@@ -470,6 +476,8 @@ namespace Baccarat
                 }
 
             }
+
+        
 
         }
         public void clean()
@@ -495,13 +503,7 @@ namespace Baccarat
             bank.Text = "Your bank:" + bankmoney.ToString();
             totalwinmoney = allbets * 2;
         }
-        public void closeapp()
-        {
 
-            MainWindow wd1 = new MainWindow();
-            Application.Current.Windows[0].Close();
-            wd1.ShowDialog();
-        }
         public void playercardno1()
         {
             int s = player1card + 1;
@@ -624,12 +626,121 @@ namespace Baccarat
                 case 4:
                     bc3.Source = new BitmapImage(new Uri(@"pack://application:,,,/Resources/" + s + "_of_spades.png"));
                     break;
+
+            }
+      
+        }
+
+        public void AddToScore_Click(object sender, RoutedEventArgs e)
+        {
+
+
+
+            InputBoxDialog inputBoxDialog = new InputBoxDialog("Enter your name", "Please enter your name:");
+            inputBoxDialog.Input = "Name";
+            bool? result = inputBoxDialog.ShowDialog();
+
+            if (result == true)
+            {
+                 name = inputBoxDialog.Input;
+            }
+
+            if (name!=null)
+            {
+                DateTime datetimenow = DateTime.Now;
+                var newData = new Score
+                {
+                    Name = name,
+                    Bankerwins = bankernumberofwins,
+                    Playerwins = playernumberofwins,
+                    Tiewins = tienumberofwins,
+                    TotalGames = playedgames,
+
+                    TotalWinMoney = totalwinmoney,
+                    TotalbetedMoney = totalbetmoney,
+                    DateTime = datetimenow
+                };
+                using (var db = new ScoreDbContext())
+                {
+                    db.Scores.Add(newData);
+
+                    db.SaveChanges();
+                }
+            }
+            
+            using (ScoreDbContext _context = new ScoreDbContext())
+            {
+                MyScores = _context.Scores.ToList();
+            }
+            DataGridScore.ItemsSource = MyScores;
+
+        }
+        public void closeapp()
+        {
+            MainWindow wd1 = new MainWindow();
+            Application.Current.Windows[0].Close();
+            wd1.ShowDialog();
+        }
+
+
+        public class InputBoxDialog : Window
+        {
+            private TextBox _inputBox;
+
+            public InputBoxDialog(string title, string prompt)
+            {
+                Title = title;
+                Width = 300;
+                Height = 150;
+                WindowStartupLocation = WindowStartupLocation.CenterScreen;
+
+                Label promptLabel = new Label
+                {
+                    Content = prompt,
+                    Margin = new Thickness(10),
+                    VerticalAlignment = VerticalAlignment.Center,
+                    HorizontalAlignment = HorizontalAlignment.Left
+                };
+
+                _inputBox = new TextBox
+                {
+                    Margin = new Thickness(10),
+                    Width = 200,
+                    VerticalAlignment = VerticalAlignment.Center,
+                    HorizontalAlignment = HorizontalAlignment.Right
+                };
+
+                Button okButton = new Button
+                {
+                    Content = "OK",
+                    Margin = new Thickness(10),
+                    Width = 75,
+                    VerticalAlignment = VerticalAlignment.Bottom,
+                    HorizontalAlignment = HorizontalAlignment.Right
+                };
+                okButton.Click += OkButton_Click;
+
+              
+                StackPanel stackPanel = new StackPanel();
+                stackPanel.Children.Add(promptLabel);
+                stackPanel.Children.Add(_inputBox);
+                stackPanel.Children.Add(okButton);
+
+                Content = stackPanel;
+            }
+
+            private void OkButton_Click(object sender, RoutedEventArgs e)
+            {
+                DialogResult = true;
+            }
+
+           
+            public string Input
+            {
+                get { return _inputBox.Text; }
+                set { _inputBox.Text = value; }
             }
         }
 
-        private void AddToScore(object sender, RoutedEventArgs e)
-        {
-
-        }
     }
-    } 
+} 
